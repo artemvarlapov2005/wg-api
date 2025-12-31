@@ -43,6 +43,7 @@ class Reader(val path: Path) {
     }
 
     private fun savePrevious() {
+        currentSection?.checkSection()
         when (currentSection) {
             is InterfaceSection -> {
                 interfaceSection = currentSection as InterfaceSection

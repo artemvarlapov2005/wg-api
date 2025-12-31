@@ -36,4 +36,10 @@ class PeerSection() : Section() {
             "persistentKeepAlive" -> persistentKeepAlive = value.toInt()
         }
     }
+
+    override fun checkSection() {
+        require(publicKey != null)
+        require(endpoint != null)
+        require(allowedIps != null)
+    }
 }

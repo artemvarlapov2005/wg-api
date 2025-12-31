@@ -64,4 +64,18 @@ class InterfaceSection() : Section() {
             "h4" -> h4 = value.toInt()
         }
     }
+
+    override fun checkSection() {
+        require(address != null)
+        require(privateKey != null)
+        require(jc != null)
+        require(jmin != null)
+        require(jmax != null)
+        require(s1 != null)
+        require(s2 != null)
+        require(h1 != null)
+        require(h2 != null)
+        require(h3 != null)
+        require(h4 != null)
+    }
 }
