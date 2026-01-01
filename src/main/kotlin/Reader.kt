@@ -2,17 +2,22 @@ package org.example
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.stream.Stream
 
 class Reader {
     private constructor()
 
     companion object {
         fun readFile(path: Path) : ConfigFile {
-            var currentSection : Section? = null
-
             val lines = Files.lines(path, Charsets.UTF_8)
 
+            return readStream(lines)
+        }
+
+        fun readStream(lines : Stream<String>) : ConfigFile {
             val builder = ConfigFileBuilder()
+
+            var currentSection : Section? = null
 
             lines.forEach {
                 val trimmed = it.replace(" ", "")

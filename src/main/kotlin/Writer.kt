@@ -9,6 +9,10 @@ class Writer {
 
     companion object {
         fun writeToFile(configFile: ConfigFile, path: Path) {
+            Files.write(path, getLines(configFile), Charsets.UTF_8)
+        }
+
+        fun getLines(configFile: ConfigFile) : List<String> {
             val lines = mutableListOf<String>()
 
             configFile.interfaceSection.let {
@@ -23,7 +27,7 @@ class Writer {
                 lines.add("")
             }
 
-            Files.write(path, lines, Charsets.UTF_8)
+            return lines
         }
     }
 }
