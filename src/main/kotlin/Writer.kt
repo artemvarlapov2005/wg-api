@@ -16,13 +16,13 @@ class Writer {
             val lines = mutableListOf<String>()
 
             configFile.interfaceSection.let {
-                lines.add("[Interface]")
+                lines.add("[$INTERFACE_SECTION]")
                 lines.addAll(it.getProperties().map { (key, value) -> "$key = $value" })
                 lines.add("")
             }
 
             configFile.peerSections.forEach {
-                lines.add("[Peer]")
+                lines.add("[$PEER_SECTION]")
                 lines.addAll(it.getProperties().map { (key, value) -> "$key = $value" })
                 lines.add("")
             }
