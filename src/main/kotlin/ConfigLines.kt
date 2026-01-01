@@ -1,4 +1,4 @@
-package org.example
+package org.matkini
 
 fun isStartSection(line : String) = line.startsWith("[") && line.endsWith("]")
 

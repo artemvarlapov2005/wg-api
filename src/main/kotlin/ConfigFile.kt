@@ -1,4 +1,4 @@
-package org.example
+package org.matkini
 
 data class ConfigFile(
     val interfaceSection : InterfaceSection,

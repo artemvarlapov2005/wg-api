@@ -1,8 +1,9 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    `maven-publish`
 }
 
-group = "org.example"
+group = "org.matkini"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -18,4 +19,12 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(21)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }

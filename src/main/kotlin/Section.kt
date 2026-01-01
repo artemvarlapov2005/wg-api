@@ -1,9 +1,11 @@
-package org.example
+package org.matkini
 
 abstract class Section {
-    abstract fun putProperty(property : String, value : String)
-    abstract fun checkSection()
     abstract fun getProperties() : Map<String, String>
+}
+
+abstract class SectionBuilder {
+    abstract fun putProperty(property : String, value : String)
 }
 
 const val INTERFACE_SECTION = "Interface"

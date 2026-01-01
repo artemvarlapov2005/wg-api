@@ -1,4 +1,4 @@
-package org.example
+package org.matkini
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -17,42 +17,41 @@ class Reader {
         fun readStream(lines : Stream<String>) : ConfigFile {
             val builder = ConfigFileBuilder()
 
-            var currentSection : Section? = null
+            var currentSectionBuilder : SectionBuilder? = null
 
             lines.forEach {
                 val trimmed = it.replace(" ", "")
                 if (isStartSection(trimmed)) {
-                    saveSection(builder, currentSection)
+                    saveSection(builder, currentSectionBuilder)
                     val sectionName = getSectionName(trimmed)
 
                     if (sectionName == INTERFACE_SECTION) {
-                        currentSection = InterfaceSection()
+                        currentSectionBuilder = InterfaceSectionBuilder()
                     }
 
                     if (sectionName == PEER_SECTION) {
-                        currentSection = PeerSection()
+                        currentSectionBuilder = PeerSectionBuilder()
                     }
                 } else {
                     if (isPropertySection(trimmed)) {
                         val (property, value) = getProperty(trimmed)
-                        currentSection?.putProperty(property, value)
+                        currentSectionBuilder?.putProperty(property, value)
                     }
                 }
             }
 
-            saveSection(builder, currentSection)
+            saveSection(builder, currentSectionBuilder)
 
             return builder.build()
         }
 
-        private fun saveSection(builder: ConfigFileBuilder, section: Section?) {
-            section?.checkSection()
-            when (section) {
-                is InterfaceSection -> {
-                    builder.addInterfaceSection(section)
+        private fun saveSection(builder: ConfigFileBuilder, sectionBuilder: SectionBuilder?) {
+            when (sectionBuilder) {
+                is InterfaceSectionBuilder -> {
+                    builder.addInterfaceSection(sectionBuilder.build())
                 }
-                is PeerSection -> {
-                    builder.addPeerSection(section)
+                is PeerSectionBuilder -> {
+                    builder.addPeerSection(sectionBuilder.build())
                 }
             }
         }

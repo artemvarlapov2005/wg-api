@@ -1,22 +1,26 @@
-package org.example
+package org.matkini
 
-class PeerSection() : Section() {
+class PeerSection(
+   val publicKey: String,
+   val endpoint: IpAddress,
+   val allowedIps: List<IpAddress>,
+   val persistentKeepAlive: Int
+) : Section() {
+    override fun getProperties(): Map<String, String> {
+        return buildMap {
+            put("PublicKey", publicKey)
+            put("Endpoint", endpoint.toString())
+            put("AllowedIPs", allowedIps.joinToString(","))
+            put("PersistentKeepalive", persistentKeepAlive.toString())
+        }
+    }
+}
+
+class PeerSectionBuilder() : SectionBuilder() {
     var publicKey : String? = null
     var endpoint : IpAddress? = null
     var allowedIps : List<IpAddress>? = null
     var persistentKeepAlive: Int? = null
-
-    constructor(
-        publicKey: String,
-        endpoint: IpAddress,
-        allowedIps: List<IpAddress>,
-        persistentKeepAlive: Int
-    ) : this() {
-        this.publicKey = publicKey
-        this.endpoint = endpoint
-        this.allowedIps = allowedIps
-        this.persistentKeepAlive = persistentKeepAlive
-    }
 
     override fun putProperty(property : String, value : String) {
         when (property) {
@@ -37,18 +41,10 @@ class PeerSection() : Section() {
         }
     }
 
-    override fun checkSection() {
+    fun build() : PeerSection {
         require(publicKey != null)
         require(endpoint != null)
         require(allowedIps != null)
-    }
-
-    override fun getProperties(): Map<String, String> {
-        return buildMap {
-            publicKey?.let { put("PublicKey", it) }
-            endpoint?.let { put("Endpoint", it.toString()) }
-            allowedIps?.let { put("AllowedIPs", it.joinToString(",")) }
-            persistentKeepAlive?.let { put("PersistentKeepalive", it.toString()) }
-        }
+        return PeerSection(publicKey!!, endpoint!!, allowedIps!!, persistentKeepAlive!!)
     }
 }
