@@ -3,54 +3,54 @@ package org.example
 import java.nio.file.Files
 import java.nio.file.Path
 
-class Reader(val path: Path) {
-    var currentSection : Section? = null
+class Reader {
+    private constructor()
 
-    var interfaceSection : InterfaceSection? = null
-    var peerSections : List<PeerSection> = listOf()
+    companion object {
+        fun readFile(path: Path) : ConfigFile {
+            var currentSection : Section? = null
 
-    fun readFile() : ConfigFile {
-        currentSection = null;
+            val lines = Files.lines(path, Charsets.UTF_8)
 
-        val lines = Files.lines(path)
+            val builder = ConfigFileBuilder()
 
-        lines.forEach {
-            val trimmed = it.replace(" ", "")
-            if (isStartSection(trimmed)) {
-                savePrevious()
-                val sectionName = getSectionName(trimmed)
+            lines.forEach {
+                val trimmed = it.replace(" ", "")
+                if (isStartSection(trimmed)) {
+                    saveSection(builder, currentSection)
+                    val sectionName = getSectionName(trimmed)
 
-                if (sectionName == INTERFACE_SECTION) {
-                    currentSection = InterfaceSection()
-                }
+                    if (sectionName == INTERFACE_SECTION) {
+                        currentSection = InterfaceSection()
+                    }
 
-                if (sectionName == PEER_SECTION) {
-                    currentSection = PeerSection()
-                }
-            } else {
-                if (isPropertySection(trimmed)) {
-                    val (property, value) = getProperty(it)
-                    currentSection?.putProperty(property, value)
+                    if (sectionName == PEER_SECTION) {
+                        currentSection = PeerSection()
+                    }
+                } else {
+                    if (isPropertySection(trimmed)) {
+                        val (property, value) = getProperty(trimmed)
+                        currentSection?.putProperty(property, value)
+                    }
                 }
             }
+
+            saveSection(builder, currentSection)
+
+            return builder.build()
         }
 
-        savePrevious()
-
-        require(interfaceSection != null)
-
-        return ConfigFile(interfaceSection!!, peerSections)
-    }
-
-    private fun savePrevious() {
-        currentSection?.checkSection()
-        when (currentSection) {
-            is InterfaceSection -> {
-                interfaceSection = currentSection as InterfaceSection
-            }
-            is PeerSection -> {
-                peerSections = peerSections + (currentSection as PeerSection)
+        private fun saveSection(builder: ConfigFileBuilder, section: Section?) {
+            section?.checkSection()
+            when (section) {
+                is InterfaceSection -> {
+                    builder.addInterfaceSection(section)
+                }
+                is PeerSection -> {
+                    builder.addPeerSection(section)
+                }
             }
         }
     }
 }
+
