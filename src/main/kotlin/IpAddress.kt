@@ -25,6 +25,8 @@ data class IpAddress(
             }
         }
 
+        fun fromIpInt(ip: Int) = IpAddress(intToIpStr(ip))
+
         fun intToIpStr(ip: Int): String =
             "${(ip ushr 24) and 0xFF}." +
                     "${(ip ushr 16) and 0xFF}." +

@@ -1,6 +1,6 @@
 package org.matkini
 
-class InterfaceSection(
+data class InterfaceSection(
     val address: IpAddress,
     val privateKey: String,
     val dns: List<IpAddress>? = null,

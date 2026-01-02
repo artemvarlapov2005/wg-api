@@ -8,6 +8,15 @@ fun isPropertySection(line : String) = line
     .withoutSpaces()
     .contains("=")
 
+fun isVersion(line : String) = line
+    .withoutSpaces()
+    .startsWith("#v")
+
+fun getVersion(line : String) = line
+    .withoutSpaces()
+    .substring(2, line.length)
+    .toLong()
+
 fun getSectionName(line : String) = line
     .withoutSpaces()
     .substring(1, line.length - 1)

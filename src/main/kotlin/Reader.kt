@@ -2,6 +2,8 @@ package org.matkini
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Instant
+import java.time.LocalDateTime
 import java.util.stream.Stream
 
 class Reader {
@@ -20,7 +22,11 @@ class Reader {
             var currentSectionBuilder : SectionBuilder? = null
 
             lines.forEach {
-                if (isStartSection(it)) {
+                if (isVersion(it)) {
+                    builder.addUpdateTime(Instant.ofEpochSecond(
+                        getVersion(it)
+                    ))
+                } else if (isStartSection(it)) {
                     saveSection(builder, currentSectionBuilder)
                     val sectionName = getSectionName(it)
 
