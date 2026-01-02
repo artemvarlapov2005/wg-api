@@ -20,10 +20,9 @@ class Reader {
             var currentSectionBuilder : SectionBuilder? = null
 
             lines.forEach {
-                val trimmed = it.replace(" ", "")
-                if (isStartSection(trimmed)) {
+                if (isStartSection(it)) {
                     saveSection(builder, currentSectionBuilder)
-                    val sectionName = getSectionName(trimmed)
+                    val sectionName = getSectionName(it)
 
                     if (sectionName == INTERFACE_SECTION) {
                         currentSectionBuilder = InterfaceSectionBuilder()
@@ -32,11 +31,9 @@ class Reader {
                     if (sectionName == PEER_SECTION) {
                         currentSectionBuilder = PeerSectionBuilder()
                     }
-                } else {
-                    if (isPropertySection(trimmed)) {
-                        val (property, value) = getProperty(trimmed)
-                        currentSectionBuilder?.putProperty(property, value)
-                    }
+                } else if (isPropertySection(it)) {
+                    val (property, value) = getProperty(it)
+                    currentSectionBuilder?.putProperty(property, value)
                 }
             }
 

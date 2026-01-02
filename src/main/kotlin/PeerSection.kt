@@ -6,12 +6,12 @@ class PeerSection(
    val allowedIps: List<IpAddress>,
    val persistentKeepAlive: Int
 ) : Section() {
-    override fun getProperties(): Map<String, String> {
+    override fun getProperties(): Map<String, List<String>> {
         return buildMap {
-            put("PublicKey", publicKey)
-            put("Endpoint", endpoint.toString())
-            put("AllowedIPs", allowedIps.joinToString(","))
-            put("PersistentKeepalive", persistentKeepAlive.toString())
+            put("PublicKey", listOf(publicKey))
+            put("Endpoint", listOf(endpoint.toString()))
+            put("AllowedIPs", listOf(allowedIps.joinToString(",")))
+            put("PersistentKeepalive", listOf(persistentKeepAlive.toString()))
         }
     }
 }

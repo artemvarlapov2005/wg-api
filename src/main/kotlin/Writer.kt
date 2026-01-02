@@ -16,13 +16,21 @@ class Writer {
 
             configFile.interfaceSection.let {
                 lines.add("[$INTERFACE_SECTION]")
-                lines.addAll(it.getProperties().map { (key, value) -> "$key = $value" })
+                lines.addAll(it.getProperties().flatMap { (key, value) ->
+                    value.map {
+                        "$key = $it"
+                    }
+                })
                 lines.add("")
             }
 
             configFile.peerSections.forEach {
                 lines.add("[$PEER_SECTION]")
-                lines.addAll(it.getProperties().map { (key, value) -> "$key = $value" })
+                lines.addAll(it.getProperties().flatMap { (key, value) ->
+                    value.map {
+                        "$key = $it"
+                    }
+                })
                 lines.add("")
             }
 

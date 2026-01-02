@@ -1,7 +1,7 @@
 package org.matkini
 
 abstract class Section {
-    abstract fun getProperties() : Map<String, String>
+    abstract fun getProperties() : Map<String, List<String>>
 }
 
 abstract class SectionBuilder {

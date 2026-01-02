@@ -12,23 +12,27 @@ class InterfaceSection(
     val h1: Int,
     val h2: Int,
     val h3: Int,
-    val h4: Int
+    val h4: Int,
+    val additionalProperties: Map<String, List<String>>? = null
 ) : Section() {
-    override fun getProperties(): Map<String, String> {
+    override fun getProperties(): Map<String, List<String>> {
         return buildMap {
             return buildMap {
-                put("Address", address.toString())
-                put("PrivateKey", privateKey)
-                dns?.let { put("DNS", it.joinToString(",")) }
-                put("Jc", jc.toString())
-                put("Jmin", jmin.toString())
-                put("Jmax", jmax.toString())
-                put("S1", s1.toString())
-                put("S2", s2.toString())
-                put("H1", h1.toString())
-                put("H2", h2.toString())
-                put("H3", h3.toString())
-                put("H4", h4.toString())
+                put("Address", listOf(address.toString()))
+                put("PrivateKey", listOf(privateKey))
+                dns?.let { put("DNS", listOf(it.joinToString(","))) }
+                put("Jc", listOf(jc.toString()))
+                put("Jmin", listOf(jmin.toString()))
+                put("Jmax", listOf(jmax.toString()))
+                put("S1", listOf(s1.toString()))
+                put("S2", listOf(s2.toString()))
+                put("H1", listOf(h1.toString()))
+                put("H2", listOf(h2.toString()))
+                put("H3", listOf(h3.toString()))
+                put("H4", listOf(h4.toString()))
+                additionalProperties?.forEach {
+                    put(it.key, it.value)
+                }
             }
         }
     }
@@ -47,6 +51,7 @@ class InterfaceSectionBuilder : SectionBuilder() {
     var h2 : Int? = null
     var h3 : Int? = null
     var h4 : Int? = null
+    var additionalProperties : MutableMap<String, List<String>> = mutableMapOf()
 
     override fun putProperty(property: String, value: String) {
         when (property) {
@@ -68,6 +73,11 @@ class InterfaceSectionBuilder : SectionBuilder() {
             "H2" -> h2 = value.toInt()
             "H3" -> h3 = value.toInt()
             "H4" -> h4 = value.toInt()
+            else -> if (!property.isBlank() && additionalProperties.contains(property)) {
+                    additionalProperties[property] = (additionalProperties[property] ?: emptyList()) + value
+                } else {
+                    additionalProperties[property] = listOf(value)
+                }
         }
     }
 
@@ -95,7 +105,8 @@ class InterfaceSectionBuilder : SectionBuilder() {
             h1!!,
             h2!!,
             h3!!,
-            h4!!
+            h4!!,
+            additionalProperties.takeIf { !it.isEmpty() }
         )
     }
 }
