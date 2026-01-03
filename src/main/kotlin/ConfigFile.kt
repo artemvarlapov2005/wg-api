@@ -6,15 +6,25 @@ import java.time.LocalDateTime
 data class ConfigFile(
     val interfaceSection : InterfaceSection,
     val peerSections : List<PeerSection>,
+    val updateTime: Instant? = null
 ) {
-    var updateTime : Instant? = null
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + interfaceSection.hashCode()
+        result = 31 * result + peerSections.hashCode()
+        return result
+    }
 
-    constructor(
-        interfaceSection : InterfaceSection,
-        peerSections : List<PeerSection>,
-        updateTime : Instant?
-    ) : this(interfaceSection, peerSections) {
-        this.updateTime = updateTime
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ConfigFile
+
+        if (interfaceSection != other.interfaceSection) return false
+        if (peerSections != other.peerSections) return false
+
+        return true
     }
 }
 
